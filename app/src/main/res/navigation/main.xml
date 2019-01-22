@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    app:startDestination="@id/cityListFragment">
+
+    <fragment
+        android:id="@+id/cityListFragment"
+        android:name="com.goddy.citystoresdemo.ui.city.CityListFragment"
+        android:label="fragment_city_list"
+        tools:layout="@layout/fragment_city_list" >
+        <action
+            android:id="@+id/action_cityListFragment_to_cityDetailFragment"
+            app:destination="@id/cityDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cityDetailFragment"
+        android:name="com.goddy.citystoresdemo.ui.city.CityDetailFragment"
+        android:label="fragment_city_detail"
+        tools:layout="@layout/fragment_city_detail" />
+    <fragment
+        android:id="@+id/mallListFragment"
+        android:name="com.goddy.citystoresdemo.ui.mall.MallListFragment"
+        android:label="fragment_mall_list"
+        tools:layout="@layout/fragment_mall_list" >
+        <action
+            android:id="@+id/action_mallListFragment_to_mallDetailFragment"
+            app:destination="@id/mallDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/shopListFragment"
+        android:name="com.goddy.citystoresdemo.ui.shop.ShopListFragment"
+        android:label="fragment_shop_list"
+        tools:layout="@layout/fragment_shop_list" >
+        <action
+            android:id="@+id/action_shopListFragment_to_shopDetailFragment"
+            app:destination="@id/shopDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mallDetailFragment"
+        android:name="com.goddy.citystoresdemo.ui.mall.MallDetailFragment"
+        android:label="fragment_mall_detail"
+        tools:layout="@layout/fragment_mall_detail" />
+    <fragment
+        android:id="@+id/shopDetailFragment"
+        android:name="com.goddy.citystoresdemo.ui.shop.ShopDetailFragment"
+        android:label="fragment_shop_detail"
+        tools:layout="@layout/fragment_shop_detail" />
+</navigation>
