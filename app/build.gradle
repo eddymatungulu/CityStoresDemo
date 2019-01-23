@@ -16,15 +16,15 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField 'String', 'BASE_URL', '"http://www.mocky.io/v2/5b7e8bc03000005c0084c210"'
+            buildConfigField 'String', 'BASE_URL', '"http://www.mocky.io/"'
         }
         staging {
-            buildConfigField 'String', 'BASE_URL', '"http://www.mocky.io/v2/5b7e8bc03000005c0084c210"'
+            buildConfigField 'String', 'BASE_URL', '"http://www.mocky.io/"'
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'BASE_URL', '"http://www.mocky.io/v2/5b7e8bc03000005c0084c210"'
+            buildConfigField 'String', 'BASE_URL', '"http://www.mocky.io/"'
         }
     }
 
@@ -64,5 +64,5 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
 
     //City Stores
-    implementation 'com.github.eddymatungulu:CityStores:b165a71fcf'
+    implementation 'com.github.eddymatungulu:CityStores:8fc8697dc4'
 }

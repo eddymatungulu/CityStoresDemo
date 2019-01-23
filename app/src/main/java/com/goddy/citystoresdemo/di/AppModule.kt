@@ -55,7 +55,7 @@ class AppModule {
     @Provides
     fun provideDb(app: Application): AppDatabase {
         return Room
-                .databaseBuilder(app, AppDatabase::class.java, "androidtrends.db")
+                .databaseBuilder(app, AppDatabase::class.java, "citystores.db")
                 .fallbackToDestructiveMigration()
                 .build()
     }
