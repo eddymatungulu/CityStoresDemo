@@ -1,56 +1,34 @@
 package com.goddy.citystoresdemo.ui.adapters
 
-import android.databinding.DataBindingComponent
-import android.databinding.DataBindingUtil
-import android.support.v7.util.DiffUtil
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import com.bumptech.glide.Glide
+import android.view.View
 import com.goddy.citystoresdemo.R
-import com.goddy.citystoresdemo.databinding.CityItemBinding
-import com.goddy.citystoresdemo.utils.AppExecutors
+import com.goddy.citystoresdemo.ui.adapters.viewHolder.BaseViewHolder
+import com.goddy.citystoresdemo.ui.adapters.viewHolder.CityViewHolder
 import com.goddy.citystoreslibrary.models.City
 
-/**
- * A RecyclerView adapter for [City] class.
- */
-class CityListAdapter(
-        private val dataBindingComponent: DataBindingComponent,
-        appExecutors: AppExecutors,
-        private val cityClickCallback: ((City) -> Unit)?
-) : DataBoundListAdapter<City, CityItemBinding>(
-        appExecutors = appExecutors,
-        diffCallback = object : DiffUtil.ItemCallback<City>() {
-            override fun areItemsTheSame(oldItem: City, newItem: City): Boolean {
-                return oldItem.id == newItem.id
-            }
+class CityListAdapter(val delegate:CityViewHolder.Delegate):BaseAdapter() {
 
-            override fun areContentsTheSame(oldItem:City, newItem: City): Boolean {
-                return oldItem.name == newItem.name
-            }
-        }
-) {
+    private val section_city = 0
 
-    override fun createBinding(parent: ViewGroup): CityItemBinding {
-        val binding = DataBindingUtil.inflate<CityItemBinding>(
-                LayoutInflater.from(parent.context),
-                R.layout.city_item,
-                parent,
-                false,
-                dataBindingComponent
-        )
-
-
-        binding.root.setOnClickListener {
-            binding.city?.let {
-                cityClickCallback?.invoke(it)
-            }
-        }
-        return binding
+    init{
+        addSection(ArrayList<City>())
     }
 
-    override fun bind(binding: CityItemBinding, item: City) {
-        binding.city = item
-        Glide.get(binding.root.context)
+    fun addCityList(cities: List<City>) {
+        sections[section_city].addAll(cities)
+        notifyDataSetChanged()
+    }
+
+    fun clearAll() {
+        sections[section_city].clear()
+        notifyDataSetChanged()
+    }
+
+    override fun layout(sectionRow: SectionRow): Int {
+        return R.layout.city_item
+    }
+
+    override fun viewHolder(layout: Int, view: View): BaseViewHolder {
+        return CityViewHolder(view, delegate)
     }
 }

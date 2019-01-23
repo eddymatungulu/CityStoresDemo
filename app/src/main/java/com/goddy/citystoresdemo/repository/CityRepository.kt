@@ -15,7 +15,7 @@ class CityRepository @Inject constructor(private val cityDao: CityDao, private v
         Timber.d("Repository Injected")
     }
 
-    fun loadRepo(): LiveData<Resource<List<City>>> {
+    fun loadCity(): LiveData<Resource<List<City>>> {
         return object: NetworkBoundRepository<List<City>, List<City>>(){
             override fun saveFetchData(items: List<City>) {
                 cityDao.insertCity(items)

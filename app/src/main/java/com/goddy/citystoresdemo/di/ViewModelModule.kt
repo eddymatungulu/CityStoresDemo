@@ -15,12 +15,12 @@ abstract class ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(CityListViewModel::class)
-    abstract fun bindRepoListViewModel(cityListViewModel: CityListViewModel): ViewModel
+    abstract fun bindCityListViewModel(cityListViewModel: CityListViewModel): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(CityDetailViewModel::class)
-    abstract fun bindRepoDetailViewModel(cityDetailViewModel: CityDetailViewModel): ViewModel
+    abstract fun bindCityDetailViewModel(cityDetailViewModel: CityDetailViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: BaseViewModelFactory): ViewModelProvider.Factory

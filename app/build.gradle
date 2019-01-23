@@ -64,5 +64,5 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
 
     //City Stores
-    implementation 'com.github.eddymatungulu:CityStores:4c7eacdc4e'
+    implementation 'com.github.eddymatungulu:CityStores:b165a71fcf'
 }
