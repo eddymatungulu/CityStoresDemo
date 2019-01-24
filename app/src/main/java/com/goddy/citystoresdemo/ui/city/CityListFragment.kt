@@ -12,19 +12,14 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.goddy.citystoresdemo.R
 import com.goddy.citystoresdemo.binding.FragmentDataBindingComponent
 import com.goddy.citystoresdemo.databinding.FragmentCityListBinding
 import com.goddy.citystoresdemo.di.Injectable
-import com.goddy.citystoresdemo.ui.adapters.CityListAdapter
 import com.goddy.citystoresdemo.ui.adapters.viewHolder.CityViewHolder
 import com.goddy.citystoresdemo.ui.widget.RecyclerViewPaginator
 import com.goddy.citystoresdemo.utils.autoCleared
-import com.goddy.citystoreslibrary.data.api.WrapperResponse
 import com.goddy.citystoreslibrary.models.City
-import com.goddy.citystoreslibrary.models.Resource
-import com.goddy.citystoreslibrary.models.Status
 import kotlinx.android.synthetic.main.fragment_city_list.*
 import javax.inject.Inject
 
@@ -66,18 +61,15 @@ class CityListFragment : Fragment(), Injectable , CityViewHolder.Delegate{
                 loadMore = {loadMore(it)},
                 onLast = { cityListViewModel.fetchStatus.isOnLast}        )
 
-        cityListViewModel.cityLiveData.observe(this,Observer{it?.let { updateCityList(it) }})
+
 
     }
 
-    private fun updateCityList(resource: Resource<List<City>>){
-        cityListViewModel.fetchStatus(resource)
-        when (resource.status) {
-            Status.SUCCESS -> adapter.addCityList(resource.data!!)
-            Status.ERROR -> Toast.makeText(activity,resource.message.toString(),Toast.LENGTH_LONG).show()
-            Status.LOADING -> {
-            }
-        }
+    private fun updateCityList(){
+        cityListViewModel.loadData().observe(this, Observer {
+
+        })
+
     }
 
     override fun onItemClick(city: City) {

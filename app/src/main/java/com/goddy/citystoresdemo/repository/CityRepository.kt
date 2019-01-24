@@ -1,51 +1,95 @@
 package com.goddy.citystoresdemo.repository
 
-import android.annotation.SuppressLint
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import com.goddy.citystoreslibrary.data.api.ApiResponse
+import com.goddy.citystoresdemo.utils.disk
+import com.goddy.citystoresdemo.utils.network
+import com.goddy.citystoresdemo.utils.ui
 import com.goddy.citystoreslibrary.data.api.ApiService
-import com.goddy.citystoreslibrary.data.api.WrapperResponse
 import com.goddy.citystoreslibrary.data.db.CityDao
 import com.goddy.citystoreslibrary.models.*
-import com.goddy.citystoreslibrary.utils.AbsentLiveData
+import org.json.JSONObject
+import retrofit2.Response
 import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CityRepository @Inject constructor(private val cityDao: CityDao, private val service: ApiService){
+class CityRepository @Inject constructor(private val cityDao: CityDao, private val service: ApiService):CityDataSource{
+
     init{
         Timber.d("Repository Injected")
     }
 
-    fun loadCity(): LiveData<Resource<List<City>>> {
-        return object: NetworkBoundRepository<List<City>, List<City>>(){
-            override fun saveFetchData(items: List<City>) {
-                cityDao.insertCity(items)
+    override fun loadCity(callbacks: CityDataSource.Callbacks) {
+        network {
+            try {
+
+                val mResponse:Response<JSONObject> = service.fetchRemoteData().execute()
+                if (mResponse.isSuccessful){
+
+                    val listData = mutableListOf<City>()
+                    val call = mResponse.body()
+                    val jArray = call?.getJSONArray("cities")
+
+                    for (i in 0 until jArray!!.length()) {
+                        val objCity = jArray.getJSONObject(i)
+                        val mCity = City()
+                        mCity.id = objCity.getInt("id")
+                        mCity.name = objCity.getString("name")
+                        val arrayMall = objCity.getJSONArray("malls")
+                        val mallList = mutableListOf<Mall>()
+                        for (j in 0 until arrayMall!!.length()){
+                            val objMall = arrayMall.getJSONObject(i)
+                            val mMall = Mall()
+                            mMall.cityId = mCity.id
+                            mMall.id = objMall.getInt("id")
+                            mMall.name = objMall.getString("name")
+
+                            val arrayShop = objMall.getJSONArray("shops")
+                            val shopList= mutableListOf<Shop>()
+                            for(k in 0 until arrayShop!!.length()){
+                                val objShop = arrayShop.getJSONObject(k)
+                                val mShop = Shop(objShop.getInt("id"),mMall.id,objShop.getString("name"))
+                                shopList.add(mShop)
+                            }
+                            mMall.shops = shopList
+                            mallList.add(mMall)
+                        }
+
+                        listData.add(mCity)
+
+                    }
+
+                    disk {
+                        cityDao.insertCity(listData)
+                        notifyOnSuccess(callbacks)
+                    }
+
+
+                }else{
+                    notifyOnError(callbacks)
+                }
+
+            }catch (e:IOException){
+                notifyOnError(callbacks)
+                e.printStackTrace()
             }
 
-            override fun shouldFetch(data: List<City>?): Boolean {
-                return data == null || data.isEmpty()
-            }
+        }
+    }
 
-            override fun loadFromDb(): LiveData<List<City>> {
-                return cityDao.fetchCities()
-            }
+    private fun notifyOnSuccess(callbacks: CityDataSource.Callbacks) {
+        ui { callbacks.onSuccess() }
+    }
 
-            override fun fetchService(): LiveData<ApiResponse<List<City>>> {
-                var data = MutableLiveData<ApiResponse<List<City>>>()
+    private fun notifyOnError(callbacks: CityDataSource.Callbacks) {
+        ui { callbacks.onError() }
+    }
 
-                data.value = service.fetchRemoteData().value?.body?.items
 
-                return data
-            }
-
-            override fun onFetchFailed(envelope: Envelope?) {
-                Timber.d("onFetchFailed : $envelope")
-            }
-
-        }.asLiveData()
+    fun getCities(id:Int):LiveData<List<City>>{
+        return cityDao.fetchCities()
     }
 
     fun getCity(id:Int):LiveData<City>{

@@ -5,7 +5,7 @@ import android.view.View
 import com.goddy.citystoresdemo.databinding.CityItemBinding
 import com.goddy.citystoreslibrary.models.City
 
-class CityViewHolder(view:View, private val delegate:Delegate):BaseViewHolder(view){
+class CityViewHolder:BaseViewM(view){
     private lateinit var city: City
     private val binding by lazy { DataBindingUtil.bind<CityItemBinding>(view) }
 
