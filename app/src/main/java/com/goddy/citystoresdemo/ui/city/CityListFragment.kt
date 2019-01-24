@@ -21,6 +21,7 @@ import com.goddy.citystoresdemo.ui.adapters.CityListAdapter
 import com.goddy.citystoresdemo.ui.adapters.viewHolder.CityViewHolder
 import com.goddy.citystoresdemo.ui.widget.RecyclerViewPaginator
 import com.goddy.citystoresdemo.utils.autoCleared
+import com.goddy.citystoreslibrary.data.api.WrapperResponse
 import com.goddy.citystoreslibrary.models.City
 import com.goddy.citystoreslibrary.models.Resource
 import com.goddy.citystoreslibrary.models.Status

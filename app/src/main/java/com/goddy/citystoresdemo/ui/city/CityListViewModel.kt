@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import com.goddy.citystoresdemo.repository.CityRepository
+import com.goddy.citystoreslibrary.data.api.WrapperResponse
 import com.goddy.citystoreslibrary.models.City
 import com.goddy.citystoreslibrary.models.FetchStatus
 import com.goddy.citystoreslibrary.models.Resource

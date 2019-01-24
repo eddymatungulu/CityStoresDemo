@@ -1,10 +1,14 @@
 package com.goddy.citystoresdemo.repository
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import com.goddy.citystoreslibrary.data.api.ApiResponse
 import com.goddy.citystoreslibrary.data.api.ApiService
+import com.goddy.citystoreslibrary.data.api.WrapperResponse
 import com.goddy.citystoreslibrary.data.db.CityDao
 import com.goddy.citystoreslibrary.models.*
+import com.goddy.citystoreslibrary.utils.AbsentLiveData
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,7 +34,11 @@ class CityRepository @Inject constructor(private val cityDao: CityDao, private v
             }
 
             override fun fetchService(): LiveData<ApiResponse<List<City>>> {
-                return service.fetchRemoteData()
+                var data = MutableLiveData<ApiResponse<List<City>>>()
+
+                data.value = service.fetchRemoteData().value?.body?.items
+
+                return data
             }
 
             override fun onFetchFailed(envelope: Envelope?) {
