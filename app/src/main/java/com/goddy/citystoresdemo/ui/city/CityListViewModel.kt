@@ -10,16 +10,13 @@ import com.goddy.citystoreslibrary.models.City
 import javax.inject.Inject
 
 class CityListViewModel @Inject constructor(var cityRepository: CityRepository): ViewModel(){
-    private val load: MutableLiveData<String> = MutableLiveData()
 
     val cityLive = SingleLiveEvent<Int>()
     val showErrorToast = SingleLiveEvent<Int>()
 
-
     init {
         cityRepository.loadCity(Callbacks())
     }
-
 
     fun loadData():LiveData<List<City>>{
         return cityRepository.getCities()

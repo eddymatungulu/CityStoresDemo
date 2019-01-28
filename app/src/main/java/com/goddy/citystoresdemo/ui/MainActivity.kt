@@ -2,11 +2,14 @@ package com.goddy.citystoresdemo.ui
 
 import android.Manifest
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.Toolbar
 import android.widget.Toast
+import androidx.navigation.fragment.NavHostFragment
 import com.goddy.citystoresdemo.R
 import com.goddy.citystoresdemo.utils.ManagePermissions
 import dagger.android.DispatchingAndroidInjector
@@ -24,9 +27,9 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
         // Initialize a list of required permissions to request runtime
         val list = listOf<String>(
-                Manifest.permission.CAMERA,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         )

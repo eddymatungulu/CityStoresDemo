@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccentGreen">#ff00A76D</color>
+    <color name="colorAccentGrey">#2a757575</color>
+    <color name="status_bar">#202124</color>
+    <color name="text_color_tertiary">#dadce0</color>
+    <color name="light_grey">#FBFBFB</color>
+    <color name="colorPrimary">#ffffff</color>
+    <color name="colorPrimaryDark">#FBFBFB</color>
+    <color name="colorAccent">#ea5206</color>
 
     <color name="colorWhite">#FFF</color>
 </resources>

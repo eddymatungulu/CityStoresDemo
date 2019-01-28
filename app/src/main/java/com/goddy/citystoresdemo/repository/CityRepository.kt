@@ -5,9 +5,9 @@ import com.goddy.citystoresdemo.utils.disk
 import com.goddy.citystoresdemo.utils.network
 import com.goddy.citystoresdemo.utils.ui
 import com.goddy.citystoreslibrary.data.api.ApiService
+import com.goddy.citystoreslibrary.data.api.WrapperResponse
 import com.goddy.citystoreslibrary.data.db.CityDao
 import com.goddy.citystoreslibrary.models.*
-import org.json.JSONObject
 import retrofit2.Response
 import timber.log.Timber
 import java.io.IOException
@@ -17,65 +17,36 @@ import javax.inject.Singleton
 @Singleton
 class CityRepository @Inject constructor(private val cityDao: CityDao, private val service: ApiService):CityDataSource{
 
-    init{
-        Timber.d("Repository Injected")
-    }
+    init{ Timber.d("Repository Injected") }
 
     override fun loadCity(callbacks: CityDataSource.Callbacks) {
         network {
             try {
-
-                val mResponse:Response<JSONObject> = service.fetchRemoteData().execute()
+                val mResponse:Response<WrapperResponse> = service.fetchRemoteData().execute()
                 if (mResponse.isSuccessful){
-
-                    val listData = mutableListOf<City>()
                     val call = mResponse.body()
-                    val jArray = call?.getJSONArray("cities")
-
-                    for (i in 0 until jArray!!.length()) {
-                        val objCity = jArray.getJSONObject(i)
-                        val mCity = City()
-                        mCity.id = objCity.getInt("id")
-                        mCity.name = objCity.getString("name")
-                        val arrayMall = objCity.getJSONArray("malls")
-                        val mallList = mutableListOf<Mall>()
-                        for (j in 0 until arrayMall!!.length()){
-                            val objMall = arrayMall.getJSONObject(i)
-                            val mMall = Mall()
-                            mMall.cityId = mCity.id
-                            mMall.id = objMall.getInt("id")
-                            mMall.name = objMall.getString("name")
-
-                            val arrayShop = objMall.getJSONArray("shops")
-                            val shopList= mutableListOf<Shop>()
-                            for(k in 0 until arrayShop!!.length()){
-                                val objShop = arrayShop.getJSONObject(k)
-                                val mShop = Shop(objShop.getInt("id"),mMall.id,objShop.getString("name"))
-                                shopList.add(mShop)
-                            }
-                            mMall.shops = shopList
-                            mallList.add(mMall)
-                        }
-
-                        listData.add(mCity)
-
-                    }
-
                     disk {
-                        cityDao.insertCity(listData)
+                        cityDao.insertCity(call!!.cities)
+                        for(city in call!!.cities){
+                            for(mall in city.malls){
+                                mall.cityId = city.id
+                                cityDao.insertMall(mall)
+
+                                for (shop in mall.shops){
+                                    shop.mallId = mall.id
+                                    cityDao.insertShop(shop)
+                                }
+                            }
+                        }
                         notifyOnSuccess(callbacks)
                     }
-
-
                 }else{
                     notifyOnError(callbacks)
                 }
-
             }catch (e:IOException){
                 notifyOnError(callbacks)
                 e.printStackTrace()
             }
-
         }
     }
 
@@ -87,8 +58,7 @@ class CityRepository @Inject constructor(private val cityDao: CityDao, private v
         ui { callbacks.onError() }
     }
 
-
-    fun getCities(id:Int):LiveData<List<City>>{
+    fun getCities():LiveData<List<City>>{
         return cityDao.fetchCities()
     }
 
